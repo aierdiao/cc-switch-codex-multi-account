@@ -1,0 +1,25 @@
+# Codex and CC Switch credentials
+**/auth.json
+**/codex_oauth_auth.json
+.codex/
+.codex-account-*/
+.cc-switch/
+
+# Secrets and local state
+.env
+.env.*
+*.log
+*.backup-*
+*.tmp
+
+# Release build output
+dist/
+release/
+
+# Local project notes for agents
+read-first/
+
+# Windows and editors
+Thumbs.db
+Desktop.ini
+.vscode/
