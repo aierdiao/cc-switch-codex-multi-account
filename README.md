@@ -1,44 +1,75 @@
 # cc-switch-codex-multi-account
 
+> Windows 上为多个 Codex / ChatGPT 账号生成隔离的原生 Codex `auth.json`，并配合 CC Switch 手动切换使用。
+
+简体中文 | [English](README.en.md) | [日本語](README.ja.md)
+
 Unofficial community tool. Not affiliated with OpenAI or CC Switch.
 
-Windows PowerShell helper for generating isolated Codex auth files and switching multiple ChatGPT accounts with CC Switch.
+![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011-blue)
+![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-5391FE)
+![Codex CLI](https://img.shields.io/badge/Codex%20CLI-0.139.0%20tested-111111)
 
-Suggested GitHub topics: `cc-switch`, `openai-codex`, `codex-cli`, `powershell`, `windows`, `multi-account`, `oauth`.
+## 简介
 
-# Windows：用 CC Switch 切换多个 Codex / ChatGPT 账号
+这个工具用于在 Windows 上生成多个相互隔离的 Codex 官方账号认证文件，然后把每个账号的 `auth.json` 手动粘贴到 CC Switch 的 OpenAI Official Codex Provider 中。
 
-> 更新时间：2026-06-13
-> 实测环境：Windows 11、PowerShell 7.6.2 / Windows PowerShell 5.1、Codex CLI 0.139.0
-
-## 安全声明
-
-本脚本只在本机处理 Codex 登录文件，不上传或收集用户数据；认证文件会按账号保存在本机 `.codex-account-N` 目录中。
-
-脚本兼容Power Shell 5.1 不会强制要求管理员权限，不会修改 CC Switch 自带的 OAuth 认证中心，通常不会影响你已经正常在使用的Codex配置。
-
-如果你对安全有担心，请先自行审阅代码后再运行。
-
-### 想快速在 CC Switch 的 Codex 下切换不同账号的 Codex 账号？
-
-目前没发现 CC Switch 有这个功能，因此这个项目的脚本可以帮您处理这个问题。
-
-由于 CC Switch 后续可能会原生集成类似的功能，所以该脚本为软件暂未集成类似功能时使用：
-
-这套配置用于：
+适用场景：
 
 ```text
 Codex CLI / VS Code Codex
-→ 切换不同 ChatGPT 账号
+→ 通过 CC Switch 切换不同 ChatGPT 账号
 ```
 
-配置好了的结果如下图所示：
+不适用场景：
+
+```text
+Claude Code
+→ CC Switch 本地代理
+→ ChatGPT / Codex 后端
+```
+
+上面这类是 CC Switch 自带的 Codex OAuth 功能，不是本脚本主要解决的问题。
+
+## 安全声明
+
+- 本脚本只在本机处理 Codex 登录文件。
+- 本脚本不上传、不收集用户数据。
+- 认证文件会按账号保存在本机 `.codex-account-N` 目录中。
+- 本脚本不强制要求管理员权限。
+- 本脚本不会调用 `codex logout`。
+- 本脚本不会修改 CC Switch 自带的 OAuth 认证中心。
+- 如果你对安全有担心，请先自行审阅代码后再运行。
+
+## 效果预览
+
+配置完成后，可以在 CC Switch 中启用不同 Codex Provider，以切换不同官方 Codex 账号。
 
 ![image-20260613121156113](README.assets/image-20260613121156113.png)
 
+## 目录
+
+- [设置说明](#设置说明)
+- [和 CC Switch 自带 Codex OAuth 的区别](#和-cc-switch-自带-codex-oauth-的区别)
+- [常见报错](#常见报错)
+- [本脚本的目录结构](#本脚本的目录结构)
+- [详细说明](#详细说明)
+- [常见问题](#常见问题)
+- [安全原则](#安全原则)
+- [完成标准](#完成标准)
+- [实现说明，供 AI 阅读](#实现说明供-ai-阅读)
+
 ## 设置说明
 
-由于是纯小白说明，所以附图会多一点，实际操作比较简单。
+快速流程（TL;DR）：
+
+1. 下载 Release 里的 ZIP 附件，解压后双击 `run-setup.cmd`（安全警告请选择“运行”）。
+2. 按提示输入要添加的 Codex 账号数量（默认 2，最多 100）。
+3. 在自动弹出的无痕浏览器中登录 OpenAI 账号，并输入 PowerShell 里显示的设备码。
+4. 脚本会把当前账号的 `auth.json` 复制到剪贴板，粘贴进 CC Switch 的 Codex Provider 并保存。
+5. 回到 PowerShell 按 Enter，继续下一个账号。
+
+下面是带截图的完整步骤，给纯新手参考，附图会多一点，实际操作比较简单。
 
 1，下载 Release 里的附件，运行 `run-setup.cmd`（安全警告请选择“运行”）。
 
@@ -84,7 +115,7 @@ Codex CLI / VS Code Codex
 
 ![image-20260613140118181](README.assets/image-20260613140118181.png)
 
-## 说明：这和 CC Switch 自带的 Codex OAuth 有什么不同
+## 和 CC Switch 自带 Codex OAuth 的区别
 
 经测试，这个脚本处理后，和 CC Switch 自带的 Codex OAuth 认证可以同时存在，通常不会冲突；它们使用不同的本地存储。
 
@@ -130,7 +161,7 @@ Codex CLI / VS Code Codex
 - CC Switch 自带 Codex OAuth：主要给 Claude 供应商里的 Codex 预设使用。
 - 本脚本：为 Codex CLI / VS Code Codex 准备多个可切换的官方账号认证。
 
-## 相关报错
+## 常见报错
 
 ### 1. device code request failed with status 429 Too Many Requests
 
@@ -177,9 +208,9 @@ OpenAI 没有公开这个设备码端点的确切冷却时间，所以 15 到 30
 
 这样所有账号规则一致，默认 `.codex` 只作为 CC Switch 的当前运行槽位。
 
----
+## 详细说明
 
-## 一、需要准备什么
+### 一、需要准备什么
 
 需要安装：
 
@@ -201,9 +232,7 @@ codex --version
 pwsh --version
 ```
 
----
-
-## 二、文件说明
+### 二、文件说明
 
 本工具包包含：
 
@@ -215,21 +244,15 @@ run-setup.cmd
 - `setup-codex-accounts.ps1`：主脚本。
 - `run-setup.cmd`：双击启动器，优先调用 PowerShell 7，未安装时回退到 Windows PowerShell 5.1。
 
----
+### 三、运行脚本
 
-## 三、运行脚本
-
-### 最简单的方法
-
-双击：
+最简单的方法是双击：
 
 ```text
 run-setup.cmd
 ```
 
-### 或在 PowerShell 中运行
-
-进入文件所在目录后执行：
+也可以进入文件所在目录后执行：
 
 ```powershell
 powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\setup-codex-accounts.ps1
@@ -237,9 +260,7 @@ powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File .\setup-codex-accoun
 
 脚本不会调用 `codex logout`，也不会修改 CC Switch 自带的 OAuth 认证中心。
 
----
-
-## 四、环境检查
+### 四、环境检查
 
 脚本会检查：
 
@@ -265,9 +286,7 @@ How many Codex accounts do you want to add? [2]
 
 直接按 Enter 默认添加两个账号，也可以输入 `3`、`4` 等，最多 100 个。
 
----
-
-## 五、依次登录每个账号
+### 五、依次登录每个账号
 
 脚本会为每个账号使用独立目录：
 
@@ -310,9 +329,7 @@ Codex Account N login verified.
 - 是否为有效 JSON；
 - `codex login status` 是否成功。
 
----
-
-## 六、把账号加入 CC Switch
+### 六、把账号加入 CC Switch
 
 每个账号验证成功后，脚本会自动把对应 `auth.json` 内容复制到剪贴板，并显示：
 
@@ -341,13 +358,11 @@ Codex Account 2
 
 保存后回到 PowerShell，按 Enter，脚本会继续处理下一个账号。
 
-### 剪贴板提醒
+剪贴板提醒：
 
 `auth.json` 是敏感登录凭据。脚本只负责复制，不会清理剪贴板或剪贴板历史。不要把内容粘贴到聊天、工单、GitHub、公开文档或截图中。
 
----
-
-## 七、设定默认账号
+### 七、设定默认账号
 
 所有账号添加完成后，在 CC Switch 中：
 
@@ -368,9 +383,7 @@ Codex Account 1
 .codex           = CC Switch 写入的当前 live 账号
 ```
 
----
-
-## 八、以后如何切换
+### 八、以后如何切换
 
 切换到另一个账号：
 
@@ -390,9 +403,7 @@ codex logout
 
 `logout` 不是账号切换方式，可能撤销当前认证并导致 CC Switch 中保存的凭据失效。
 
----
-
-## 九、添加第三、第四个账号
+### 九、添加第三、第四个账号
 
 重新运行脚本并输入更大的账号数量，例如：
 
@@ -436,17 +447,13 @@ A valid login already exists for Codex Account 1. [R]euse, [N]ew login, [S]kip, 
 
 如果已有 `auth.json` 无效、太小、不是 JSON，或 `codex login status` 验证不通过，脚本会把它当成未登录账号，并进入新的登录流程。
 
----
-
-## 十、换电脑时怎么做
+### 十、换电脑时怎么做
 
 建议在每台 Windows 电脑上分别运行脚本并重新授权，不要直接把旧电脑的 `auth.json` 复制到新电脑。
 
 原电脑上的认证通常不会因为新电脑重新登录而自动失效，但两台电脑使用同一个 ChatGPT 账号时仍共享同一账号的 Codex 使用额度。
 
----
-
-## 十一、常见问题
+## 常见问题
 
 ### 没有找到 Codex CLI
 
@@ -470,9 +477,7 @@ codex --version
 
 完全关闭 VS Code 和 Codex 终端，再重新启动。不要只关闭聊天面板。
 
----
-
-## 十二、安全原则
+## 安全原则
 
 不要公开：
 
@@ -492,8 +497,6 @@ codex --version
 
 如果凭据泄露，应重新登录生成新认证，并替换 CC Switch 中对应 Provider 的内容。
 
----
-
 ## 完成标准
 
 ```text
@@ -506,8 +509,6 @@ codex --version
 7. 默认 .codex 只作为 CC Switch live 目录
 8. 切换账号时不运行 codex logout
 ```
-
----
 
 ## 实现说明，供 AI 阅读
 
