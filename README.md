@@ -1,5 +1,12 @@
 # cc-switch-codex-multi-account
 
+更新（2026-06-13）： 作者已回复：新版 CC Switch 新版会有一个迁移开关来解决这个问题。
+https://github.com/farion1231/cc-switch/issues/2299#issuecomment-4698073503
+因此，下面的项目主要作为当前版本的 Windows 临时解决方案。
+
+---
+
+
 > Windows 上为多个 Codex / ChatGPT 账号生成隔离的原生 Codex `auth.json`，并配合 CC Switch 手动切换使用。
 
 简体中文 | [English](README.en.md) | [日本語](README.ja.md)
