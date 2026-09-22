@@ -1,5 +1,24 @@
 # cc-switch-codex-multi-account
 
+更新（2026-09-22）： 软件原生已完美支持且实测成功，此项目归档。
+
+CC Switch v3.20.3 切换两个 OpenAI 官方账号：
+
+  1.  先在 OAuth Auth Center 里分别登录两个 OpenAI 账号，确保两个账号都已经授权成功。
+  2.  进入 Codex 页面，分别新建两个 Provider。
+  3.  两个 Provider 都选择 OpenAI Official。
+  4.  分别绑定不同账号，名字可以直接写：
+     *   OpenAI Account 1
+     *   OpenAI Account 2
+  5.  API Key 不用填，走官方 OAuth / auth.json 登录。
+  6.  切换账号时，在 CC Switch 里点对应的那张 OpenAI Official Provider 卡启用。
+  7.  然后把 Codex / VS Code 完全关闭再重新打开，最好新建一个会话。
+
+如果某个旧账号显示 session expired，就先在 OAuth Auth Center 重新登录那个账号，再添加/绑定。
+
+
+---
+
 更新（2026-07-02）： 我自己搞不懂官方更新的功能在哪里，我仍然在使用这个笨方法。  
 如果哪天不能用了，我再归档。该项目没归档的话就是能用。   
 
